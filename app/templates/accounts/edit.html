@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Cuenta</title>
+</head>
+<body>
+    <h1>Editar Cuenta: {{ account.name }}</h1>
+    
+    <!-- Mensajes de error -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <p class="{{ category }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('accounts.edit', id=account.id) }}">
+        <div>
+            <label>Nombre de la cuenta:</label>
+            <input type="text" name="name" required 
+                   value="{{ account.name }}" 
+                   maxlength="100">
+        </div>
+        
+        <div>
+            <label>Saldo actual:</label>
+            <input type="text" value="${{ '%.2f'|format(account.balance) }}" disabled>
+            <small>(El saldo se actualiza automáticamente con los gastos)</small>
+        </div>
+        
+        <div>
+            <label>
+                <input type="checkbox" name="can_use" 
+                       {{ 'checked' if account.can_use }}>
+                ¿Disponible para usar?
+            </label>
+        </div>
+        
+        <button type="submit">Guardar Cambios</button>
+    </form>
+
+    <a href="{{ url_for('accounts.dashboard') }}">Cancelar</a>
+</body>
+</html>

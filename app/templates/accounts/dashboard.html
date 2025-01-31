@@ -1,0 +1,36 @@
+
+    <title>Panel de Cuentas</title>
+
+    <h1>Mis Cuentas</h1>
+    <a href="{{ url_for('accounts.create') }}">Crear Nueva Cuenta</a>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <p class="{{ category }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="accounts-list">
+        {% for account in accounts %}
+            <div class="account-card">
+                <h3>{{ account.name }}</h3>
+                <p>Saldo: ${{ "%.2f"|format(account.balance) }}</p>
+                <p>Saldo Inicial: ${{ "%.2f"|format(account.initial_balance) }}</p>
+                <p>Disponible: {{ 'Sí' if account.can_use else 'No' }}</p>
+                <small>Creada el: {{ account.created_at.strftime('%d/%m/%Y') }}</small>
+                
+                <div class="actions">
+                    <a href="{{ url_for('accounts.edit', id=account.id) }}">Editar</a>
+                    <a href="{{ url_for('accounts.delete', id=account.id) }}">Eliminar</a>
+                    <a href="{{ url_for('income.list', account_id=account.id) }}">Ver Ingresos</a>
+                </div>
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
+    
+    <a href="{{ url_for('index') }}">Volver al Inicio</a>
